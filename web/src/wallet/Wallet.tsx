@@ -14,6 +14,9 @@ import { useLocalStorage } from '../utils';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '15em',
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
   card: {
     textAlign: 'center',

@@ -7,28 +7,31 @@ import Box from '@material-ui/core/Box';
 import HandsignImg from './components/HandsignImg';
 import * as Msg from './msg';
 import * as Game from './game';
-import ScoreStar from './components/ScoreStar';
+import ScoreText from './components/ScoreText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import RoundEnd from './components/RoundEnd';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    padding: '0 2rem 0 2rem',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    maxWidth: '80rem',
   },
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
-  star: {
-    paddingLeft: '0.5em',
-    paddingRight: '0.5em',
-  },
+
   stars: {
     paddingBottom: '0.7em',
+    textAlign: 'center',
   },
   round: {
     textAlign: 'center',
+    fontFamily: 'Atkinson Hyperlegible, system-ui, ui-sans-serif',
   },
   leave: {
     textAlign: 'right',
@@ -38,6 +41,38 @@ const useStyles = makeStyles((theme) => ({
     wordWrap: 'break-word',
     wordBreak: 'break-all',
     height: '100%',
+  },
+  you: {
+    fontSize: '1.5rem',
+    lineHeight: '2rem',
+    color: '#475569',
+    fontWeight: 700,
+    fontFamily: 'Atkinson Hyperlegible, system-ui, ui-sans-serif',
+  },
+  them: {
+    fontSize: '1.5rem',
+    lineHeight: '2rem',
+    color: '#991b1b',
+    fontWeight: 700,
+    fontFamily: 'Atkinson Hyperlegible, system-ui, ui-sans-serif',
+  },
+  score: {
+    fontSize: '2.25rem',
+    lineHeight: ' 2.5rem',
+    fontWeight: 700,
+  },
+  scoreSection: {
+    justifyContent: 'space-between',
+    display: 'flex',
+  },
+  choices: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems:"center"
+  },
+  spinner: {
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));
 
@@ -154,7 +189,9 @@ const GamePlaying = (props: Props) => {
           <Grid item>
             <Typography>Waiting for other player</Typography>
             {claimingInactivity ? (
-              <CircularProgress />
+              <div className={classes.spinner}>
+                <CircularProgress />
+              </div>
             ) : (
               <Button variant="contained" color="primary" onClick={tryClaimInactivity}>
                 Cancel game
@@ -169,80 +206,70 @@ const GamePlaying = (props: Props) => {
   return (
     <div className={classes.root}>
       <RoundEnd round={game.round} rounds={game.rounds} />
-      <h2 className={classes.round}>
+      {/* <h2 className={classes.round}>
         Round {game.stage === Game.Stage.Over ? game.round - 1 : game.round}
-      </h2>
-      <Grid container spacing={3}>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>
-            <div className={classes.stars}>
-              <ScoreStar pos={0} score={game.wins} className={classes.star} />
-              <ScoreStar pos={1} score={game.wins} className={classes.star} />
-              <ScoreStar pos={2} score={game.wins} className={classes.star} />
+      </h2> */}
+      <div className={classes.scoreSection}>
+        <div className={classes.stars}>
+          <ScoreText
+            score={game.wins}
+            label="YOU"
+            labelClass={classes.you}
+            scoreClass={classes.score}
+          />
+        </div>
+        <div className={classes.stars}>
+          <ScoreText
+            score={game.losses}
+            label="THEM"
+            labelClass={classes.them}
+            scoreClass={classes.score}
+          />
+        </div>
+      </div>
+      <div className={classes.choices}>
+        {displayContent === DisplayContent.Loading && <CircularProgress />}
+        {displayContent === DisplayContent.SelectedHandsign && game.lastHandsign && (
+          <>
+            <div>
+              <HandsignImg handsign={game.lastHandsign} />
+              <div>you choose {DisplayContent.SelectedHandsign}</div>
             </div>
 
-            {displayContent === DisplayContent.Loading && <CircularProgress />}
-            {displayContent === DisplayContent.SelectedHandsign && game.lastHandsign && (
-              <HandsignImg handsign={game.lastHandsign} />
-            )}
-            {displayContent === DisplayContent.Ending && <p>You {game.won ? 'won' : 'lost'}</p>}
-            {displayContent === DisplayContent.PickHandsign && (
-              <div>
-                <Grid container justify="center" alignItems="center" spacing={3}>
-                  <Grid item sm={4}>
-                    <HandsignImg
-                      handsign={Msg.Handsign.Rock}
-                      onClick={() => pickHandsign(Msg.Handsign.Rock)}
-                    />
-                  </Grid>
-                  <Grid item sm={4}>
-                    <HandsignImg
-                      handsign={Msg.Handsign.Paper}
-                      onClick={() => pickHandsign(Msg.Handsign.Paper)}
-                    />
-                  </Grid>
-                  <Grid item sm={4}>
-                    <HandsignImg
-                      handsign={Msg.Handsign.Scissors}
-                      onClick={() => pickHandsign(Msg.Handsign.Scissors)}
-                    />
-                  </Grid>
-                </Grid>
-                {game.lossDeadlineSeconds !== undefined && game.lossDeadlineSeconds > 0 && (
+            <div>VS</div>
+
+            <div>
+              <div>waiting for them</div>
+            </div>
+          </>
+        )}
+        {displayContent === DisplayContent.Ending && <p>You {game.won ? 'won' : 'lost'}</p>}
+        {displayContent === DisplayContent.PickHandsign && (
+          <div className={classes.choices}>
+            <HandsignImg
+              handsign={Msg.Handsign.Rock}
+              onClick={() => pickHandsign(Msg.Handsign.Rock)}
+            />
+
+            <HandsignImg
+              handsign={Msg.Handsign.Paper}
+              onClick={() => pickHandsign(Msg.Handsign.Paper)}
+            />
+
+            <HandsignImg
+              handsign={Msg.Handsign.Scissors}
+              onClick={() => pickHandsign(Msg.Handsign.Scissors)}
+            />
+
+            {/* {game.lossDeadlineSeconds !== undefined && game.lossDeadlineSeconds > 0 && (
                   <p>You have {game.lossDeadlineSeconds}s</p>
                 )}
                 {game.lossDeadlineSeconds === 0 && (
                   <p>Play before opponent claims victory for inactivity</p>
-                )}
-              </div>
-            )}
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>
-            <div className={classes.stars}>
-              <ScoreStar pos={0} score={game.losses} className={classes.star} />
-              <ScoreStar pos={1} score={game.losses} className={classes.star} />
-              <ScoreStar pos={2} score={game.losses} className={classes.star} />
-            </div>
-            {game.stage === Game.Stage.Over && <p>Game over</p>}
-            {game.stage === Game.Stage.GameOn &&
-              (game.opponentPlayed ? <p>Opponent played</p> : <p>Waiting for opponent to play</p>)}
-            {game.winDeadlineSeconds !== undefined && game.winDeadlineSeconds > 0 && (
-              <p>They have {game.winDeadlineSeconds}s</p>
-            )}
-            {game.winDeadlineSeconds !== undefined &&
-              game.winDeadlineSeconds === 0 &&
-              (claimingInactivity ? (
-                <CircularProgress />
-              ) : (
-                <Button variant="contained" color="primary" onClick={tryClaimInactivity}>
-                  Claim victory for inactivity
-                </Button>
-              ))}
-          </Paper>
-        </Grid>
-      </Grid>
+                )} */}
+          </div>
+        )}
+      </div>
       {game.stage === Game.Stage.Over && (
         <div className={classes.leave}>
           <Button variant="contained" color="primary" onClick={() => leaveGame()}>

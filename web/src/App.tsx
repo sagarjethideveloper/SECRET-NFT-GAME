@@ -13,10 +13,20 @@ import useAccount from './wallet/useAccount';
 import Banner from './Banner';
 import Grid from '@material-ui/core/Grid';
 import GameTicker from './components/GameTicker';
+import { makeStyles } from '@material-ui/core/styles';
+import Description from './components/Description';
 
 const config = envConfig();
 
+const useStyles = makeStyles((theme) => ({
+  banner: {
+    justifyContent: 'center',
+    display: 'flex',
+  },
+}));
+
 export const App: React.FC = () => {
+  const classes = useStyles();
   const [client, setClient] = useState<SecretJS.SigningCosmWasmClient | undefined>();
   const [game, setGame, loadGame] = useLocalStorage<Game.Game | undefined>(
     'game',
@@ -31,20 +41,26 @@ export const App: React.FC = () => {
   return (
     <div>
       <Grid container spacing={3} justify="flex-end">
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={12} className={classes.banner}>
           <Banner />
         </Grid>
-        <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={3}>
           <Grid container justify="flex-end">
-            <Wallet
+          <Wallet
               account={account}
               client={client}
               setClient={setClient}
               faucetUrl={config.faucetUrl}
             />
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
+      <Wallet
+        account={account}
+        client={client}
+        setClient={setClient}
+        faucetUrl={config.faucetUrl}
+      />
       {client && game && (
         <GameTicker client={client} game={game} setGame={setGame}>
           <GamePlaying
@@ -100,6 +116,7 @@ export const App: React.FC = () => {
           </Grid>
         </Grid>
       )}
+      <Description/>
     </div>
   );
 };
@@ -142,7 +159,7 @@ const playGame = async (
         return;
       }
     }
-   // console.log('playGame error:', e.message);
+    // console.log('playGame error:', e.message);
     enqueueSnackbar('Game creation error', { variant: 'error' });
   }
 };

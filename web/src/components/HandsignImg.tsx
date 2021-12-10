@@ -2,16 +2,21 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import * as Msg from '../msg';
-import rockImg from '../image/rock.svg';
-import paperImg from '../image/paper.svg';
-import scissorsImg from '../image/scissors.svg';
+import { motion } from "framer-motion";
 
 const useStyles = makeStyles((theme) => ({
   handsignDiv: {
     display: 'flex',
     justifyContent: 'center',
-    width: '100%',
     height: '100%',
+    fontSize: '2.25rem',
+    lineHeight: '2.5rem',
+    boxShadow: 'rgb(99 99 99 / 20%) 0px 2px 8px 0px',
+    padding: '1rem',
+    borderColor: 'rgba(243, 244, 246, var(--tw-border-opacity))',
+    borderRadius: '9999px',
+    margin: 'auto 12px auto 12px',
+    cursor:'pointer'
   },
   handsignImg: {
     width: '80%',
@@ -36,23 +41,31 @@ const HandsignImg = (props: Props) => {
   let img;
   switch (props.handsign) {
     case Msg.Handsign.Rock:
-      img = rockImg;
+      img = '💎';
       break;
     case Msg.Handsign.Paper:
-      img = paperImg;
+      img = '📜';
       break;
     case Msg.Handsign.Scissors:
-      img = scissorsImg;
+      img = '✂️';
   }
 
   return (
     <div className={classes.handsignDiv}>
-      <img
+      {/* <img
         src={img}
         alt={props.handsign.toString()}
         className={handsignImg}
         onClick={() => props.onClick && props.onClick()}
-      />
+      /> */}
+      <motion.div
+        whileHover={{ scale: 1.2 }}
+        whileTap={{ scale: 0.95 }}
+        className="rounded-full border-coolGray-100 shadow-md p-4 text-4xl"
+        onClick={() => props.onClick && props.onClick()}
+      >
+        {img}
+      </motion.div>
     </div>
   );
 };

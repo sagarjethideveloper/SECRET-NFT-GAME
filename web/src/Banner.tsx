@@ -1,12 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import mascot from './image/stone-giant.svg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: '20em',
+    maxWidth: '30em',
   },
   secret: {
     textAlign: 'center',
@@ -16,6 +13,14 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     wordSpacing: 99999,
   },
+  header: {
+    fontSize: '3rem',
+    lineHeight: 1,
+    textAlign: 'center',
+    fontWeight: 600,
+    fontFamily: ' Atkinson Hyperlegible, system-ui, ui-sans-serif',
+    padding: "3rem 0 3rem 0"
+  },
 }));
 
 const Banner = () => {
@@ -23,21 +28,11 @@ const Banner = () => {
 
   return (
     <div className={classes.root}>
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h4" color="textPrimary" className={classes.secret}>
-            SECRET
-          </Typography>
-        </Grid>
-        <Grid item xs={7}>
-          <Typography variant="h4" color="textPrimary" className={classes.rps}>
-            Rock Paper Scissors
-          </Typography>
-        </Grid>
-        <Grid item xs={5}>
-          <img src={mascot} alt={'mascot'} />
-        </Grid>
-      </Grid>
+      <div className={classes.header}>
+        <span>SECRET</span>
+        <br />
+        <span className="block"> Rock Paper Scissors</span>
+      </div>
     </div>
   );
 };
